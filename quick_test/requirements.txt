@@ -1,8 +1,0 @@
-seleniumbase>=4.39.6
-nodriver
-pyvirtualdisplay
-pdbp
-tabcompleter
-sbvirtualdisplay
-pyautogui
-python-xlib
