@@ -4,4 +4,5 @@ pyvirtualdisplay
 pdbp
 tabcompleter
 sbvirtualdisplay
-flask
+pyautogui
+python-xlib
