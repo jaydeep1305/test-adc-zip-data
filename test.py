@@ -117,8 +117,12 @@ def main():
                        help='Comma-separated list of data to check')
     args = parser.parse_args()
 
-    single_data = [d.strip() for d in args.data.split(',')]
+    if args.data.split(',').strip() == '':
+        print("No data provided")
+        return
 
+    single_data = [d.strip() for d in args.data.split(',')]
+    
     check_data(single_data)
 
 if __name__ == "__main__":
