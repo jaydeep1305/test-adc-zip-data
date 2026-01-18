@@ -117,9 +117,9 @@ def main():
                        help='Comma-separated list of data to check')
     args = parser.parse_args()
 
-    if args.data.split(',').strip() == '':
+    if args.data.strip() == '':
         print("No data provided")
-        return
+        sys.exit(1)
 
     single_data = [d.strip() for d in args.data.split(',')]
     
