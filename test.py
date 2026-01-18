@@ -2,8 +2,9 @@ from seleniumbase import SB
 import json
 import sys
 import argparse
+import re
 
-def check_domain_authority(domains):
+def check_data(single_data):
     """Check Data"""
     all_results = []
 
@@ -11,12 +12,12 @@ def check_domain_authority(domains):
         url = "https://ahrefs.com/website-authority-checker/"
         sb.uc_open_with_reconnect(url, 5)
 
-        for domain in domains:
-            print(f"Checking domain: {domain}")
+        for d in single_data:
+            # print(f"Checking data: {d}")
+            print(".")
 
-            # Clear input and type new domain
             sb.clear('input[type="text"]')
-            sb.type('input[type="text"]', domain)
+            sb.type('input[type="text"]', d)
             sb.press_keys('input[type="text"]', "\n")
             sb.sleep(3)
 
@@ -27,17 +28,17 @@ def check_domain_authority(domains):
             # Wait for results modal to appear
             sb.wait_for_element('button[class*="closeButton"]', timeout=30)
 
-            # Extract Domain Rating
-            domain_rating = None
+            # Extract DR
+            dr = None
             try:
                 value_spans = sb.find_elements('span')
                 for span in value_spans:
                     text = span.text.strip()
                     if (text.isdigit() and len(text) <= 3 and text != "0"):
-                        domain_rating = int(text)
+                        dr = int(text)
                         break
             except Exception as e:
-                print(f"Error extracting domain rating: {e}")
+                print(f"Error extracting dr: {e}")
 
             # Extract Backlinks
             backlinks = None
@@ -87,8 +88,8 @@ def check_domain_authority(domains):
 
             # Create result data
             result_data = {
-                "domain": domain,
-                "domain_rating": domain_rating,
+                "data": d,
+                "dr": dr,
                 "backlinks": backlinks,
                 "backlinks_dofollow_percentage": backlinks_dofollow_percentage,
                 "linking_websites": linking_websites,
@@ -106,8 +107,7 @@ def check_domain_authority(domains):
 
         # Print results
         print(json.dumps(all_results, indent=2))
-        sb.post_message("SeleniumBase wasn't detected", duration=4)
-        print(f"Success! Checked {len(domains)} domains without detection!")
+        print(f"Success! Checked {len(single_data)} without detection!")
 
 def main():
     parser = argparse.ArgumentParser(description='Check Data')
@@ -115,10 +115,9 @@ def main():
                        help='Comma-separated list of data to check')
     args = parser.parse_args()
 
-    # Parse domains
-    domains = [domain.strip() for domain in args.domains.split(',')]
+    single_data = [d.strip() for d in args.data.split(',')]
 
-    check_domain_authority(domains)
+    check_data(single_data)
 
 if __name__ == "__main__":
     main()
