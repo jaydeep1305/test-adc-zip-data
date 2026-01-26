@@ -4,6 +4,7 @@ import sys
 import argparse
 import re
 import requests
+import os
 
 def check_data(single_data):
     """Check Data"""
@@ -116,21 +117,22 @@ def main():
     parser = argparse.ArgumentParser(description='Check Data')
     parser.add_argument('--data', type=str,
                        help='Comma-separated list of data to check')
-    parser.add_argument('--data-url', type=str,
-                       help='URL to JSON file containing list of domains')
     args = parser.parse_args()
 
     single_data = []
 
-    if args.data_url:
+    # Check for DATA_URL environment variable
+    data_url = os.environ.get('DATA_URL')
+    
+    if data_url:
         # Fetch domains from URL
         try:
-            response = requests.get(args.data_url)
+            response = requests.get(data_url)
             response.raise_for_status()
             single_data = response.json()
-            print(f"Fetched {len(single_data)} domains from URL")
+            print(f"Fetched {len(single_data)} domains from DATA_URL environment variable")
         except Exception as e:
-            print(f"Error fetching data from URL: {e}")
+            print(f"Error fetching data from DATA_URL: {e}")
             sys.exit(1)
     elif args.data:
         if args.data.strip() == '':
@@ -138,7 +140,7 @@ def main():
             sys.exit(1)
         single_data = [d.strip() for d in args.data.split(',')]
     else:
-        print("Please provide --data or --data-url")
+        print("Please provide --data argument or set DATA_URL environment variable")
         sys.exit(1)
 
     if not single_data:
