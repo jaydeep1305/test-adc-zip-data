@@ -122,7 +122,7 @@ def main():
     single_data = []
 
     # Check for DATA_URL environment variable
-    data_url = os.environ.get('DATA_URL')
+    data_url = os.environ.get('MOTI_JOB_DATA_URL')
     
     if data_url:
         # Fetch domains from URL
