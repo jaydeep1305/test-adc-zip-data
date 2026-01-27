@@ -10,7 +10,7 @@ def check_data(single_data):
     """Check Data"""
     all_results = []
 
-    with SB(uc=True, test=True) as sb:
+    with SB(uc=True, test=True, xvfb=True, xvfb_metrics="1920,1080", ad_block=True) as sb:
         url = "https://ahrefs.com/website-authority-checker/"
         sb.uc_open_with_reconnect(url, 5)
 
